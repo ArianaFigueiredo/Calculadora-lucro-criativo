@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Calculadora para Papeleiras</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+
+  <style>
+    :root {
+  --bg: #fff6fb;
+  --card-bg: #ffffff;
+  --accent: #ff8fb7;
+  --accent-soft: #ffe0ec;
+  --accent-dark: #e0658f;
+  --text-main: #33303a;
+  --text-muted: #7c7a85;
+  --border-soft: #f0e4f2;
+  --shadow-soft: 0 18px 35px rgba(0, 0, 0, 0.06);
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family:
+    "Poppins",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background: radial-gradient(
+    circle at top left,
+    #ffe5f0 0,
+    #fff6fb 38%,
+    #ffffff 100%
+  );
+  color: var(--text-main);
+}
+
+.app {
+  max-width: 1040px;
+  margin: 24px auto 40px;
+  padding: 0 16px;
+}
+
+/* ===== HEADER ===== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* ===== LOGO PEQUENA NO CANTO SUPERIOR ESQUERDO ===== */
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.logo-img {
+  width: 280px; /* tamanho no desktop/notebook (ajustado) */
+  height: auto;
+  transition: transform 0.2s ease;
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
+}
+
+/* ===== LOGO PILL (opcional, se quiser manter) ===== */
+.logo-pill {
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, #ffe0ec, #fff5d7);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.logo-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 6px rgba(255, 143, 183, 0.3);
+}
+
+.title-block h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  letter-spacing: 0.02em;
+}
+
+.title-block p {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.badge-group {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 143, 183, 0.08);
+  border: 1px solid rgba(255, 143, 183, 0.3);
+  color: var(--accent-dark);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
+  gap: 20px;
+  align-items: flex-start;
+}
+
+@media (max-width: 840px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .badge-group {
+    margin-left: 0;
+  }
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 18px 18px 20px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-soft);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-chip {
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  font-weight: 500;
+}
+
+.card-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.section-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin: 14px 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.section-label::before {
+  content: "";
+  width: 14px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0.8;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+}
+
+.form-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px 12px;
+}
+
+@media (max-width: 720px) {
+  .form-grid,
+  .form-grid-3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+label span.main {
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+label span.hint {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+input[type="number"],
+input[type="text"] {
+  border-radius: var(--radius-md);
+  border: 1px solid #e7d8ec;
+  padding: 7px 10px;
+  font-size: 0.85rem;
+  outline: none;
+  transition:
+    border 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.06s ease;
+  background: #fefbff;
+}
+
+input[type="number"]:focus,
+input[type="text"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(255, 143, 183, 0.2);
+  transform: translateY(-1px);
+  background: #ffffff;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.inline-group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.inline-group span.unit {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 6px 9px;
+  border-radius: var(--radius-pill);
+  background: #f7edf9;
+  border: 1px solid #ecdaf4;
+}
+
+.btn-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+button {
+  border-radius: var(--radius-pill);
+  border: none;
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(255, 143, 183, 0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 26px rgba(255, 143, 183, 0.5);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid #e4d4e9;
+}
+
+.btn-ghost:hover {
+  background: #fdf3ff;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.pill-small {
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: #f7edf9;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pill-small-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.price-main {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 4px 0 2px;
+}
+
+.price-main span {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.price-secondary {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.tag {
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: #fdf3ff;
+  border: 1px dashed #edcce9;
+  color: var(--text-muted);
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0),
+    #f1dde6,
+    rgba(0, 0, 0, 0)
+  );
+  margin: 8px 0 10px;
+}
+
+.breakdown {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 12px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 720px) {
+  .breakdown {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.breakdown-item {
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  background: #fff8fd;
+  border: 1px solid #f2d8ea;
+  font-size: 0.78rem;
+}
+
+.breakdown-item .label {
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.breakdown-item .value {
+  font-weight: 600;
+}
+
+.note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.highlight-text {
+  font-size: 0.82rem;
+  margin-top: 6px;
+}
+
+.highlight-text strong {
+  color: var(--accent-dark);
+}
+
+/* ===== RESPONSIVO MOBILE ===== */
+@media (max-width: 480px) {
+  body {
+    padding: 0 10px;
+  }
+
+  .header-left {
+    display: flex;
+    flex-direction: row; /* mantém lado a lado */
+    align-items: center;
+    justify-content: center; /* CENTRALIZA */
+    gap: 8px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .logo-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .logo-img {
+    width: 180px; /* tamanho menor no mobile (ajustado) */
+  }
+
+  .title-block {
+    text-align: center;
+  }
+
+  .title-block h1 {
+    font-size: 1.15rem;
+  }
+
+  .title-block p {
+    font-size: 0.8rem;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .btn-row {
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .price-main {
+    font-size: 1.3rem;
+  }
+
+  .tag-row {
+    flex-direction: column;
+  }
+}
+
+
+
+
+
+
+
+  </style>
+<header class="header">
+  <div class="header-left">
+
+    <!-- LOGO -->
+    <div class="logo-wrapper">
+      <img src="logo-lucro-criativo.png" 
+           alt="Lucro Criativo by Ariana Figueiredo" 
+           class="logo-img">
+    </div>
+
+    <!-- TÍTULO -->
+    <div class="title-block">
+      <h1>Precificador de Kits & Lembrancinhas</h1>
+      <p>Calcule custo real, lucro e preço ideal de cada item da sua papelaria personalizada.</p>
+    </div>
+
+  </div>
+
+  <div class="badge-group">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      focado em papelaria personalizada
+    </div>
+  </div>
+</header>
+
+    <main class="grid">
+      <!-- CARD ESQUERDA: FORMULÁRIO -->
+      <section class="card">
+        <div class="card-header">
+          <div class="card-title">
+            🧮 Configurações & Produto
+          </div>
+          <div class="card-chip">Passo 1: preencha os campos</div>
+        </div>
+        <p class="card-subtitle">
+          Comece definindo seu valor de hora e percentuais. Depois preencha os custos do item que você está criando.
+        </p>
+
+        <div class="section-label">Configurações gerais</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>
+              <span class="main">Valor da sua hora (R$/h)</span>
+              <span class="hint">ex.: 25,00</span>
+            </label>
+            <div class="inline-group">
+              <input id="valorHora" type="number" step="0.01" placeholder="25,00">
+              <span class="unit">R$/hora</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>
+              <span class="main">Despesas fixas (%)</span>
+              <span class="hint">aluguel, internet, luz…</span>
+            </label>
+            <div class="inline-group">
+              <input id="despesasFixas" type="number" step="0.01" placeholder="10">
+              <span class="unit">%</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>
+              <span class="main">Margem de lucro (%)</span>
+              <span class="hint">quanto quer ganhar</span>
+            </label>
+            <div class="inline-group">
+              <input id="margemLucro" type="number" step="0.01" placeholder="60">
+              <span class="unit">%</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>
+              <span class="main">Taxa maquininha (%)</span>
+              <span class="hint">opcional</span>
+            </label>
+            <div class="inline-group">
+              <input id="taxaMaquininha" type="number" step="0.01" placeholder="4">
+              <span class="unit">%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-label">Produto de papelaria</div>
+
+        <div class="field">
+          <label>
+            <span class="main">Nome do produto</span>
+            <span class="hint">ex.: Kit festa tema unicórnio</span>
+          </label>
+          <input id="nomeProduto" type="text" placeholder="Ex.: Caixa explosão dia das mães">
+        </div>
+
+        <div class="form-grid-3">
+          <div class="field">
+            <label>
+              <span class="main">Papéis (R$)</span>
+              <span class="hint">colorplus, fotográfico…</span>
+            </label>
+            <input id="custoPapeis" type="number" step="0.01" placeholder="0,00">
+          </div>
+
+          <div class="field">
+            <label>
+              <span class="main">Fitas / laços (R$)</span>
+              <span class="hint">cetim, sisal…</span>
+            </label>
+            <input id="custoFitas" type="number" step="0.01" placeholder="0,00">
+          </div>
+
+          <div class="field">
+            <label>
+              <span class="main">Apliques / toppers (R$)</span>
+              <span class="hint">camadas, recortes…</span>
+            </label>
+            <input id="custoApliques" type="number" step="0.01" placeholder="0,00">
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>
+              <span class="main">Outros insumos (R$)</span>
+              <span class="hint">cola, glitter, base…</span>
+            </label>
+            <input id="outrosInsumos" type="number" step="0.01" placeholder="0,00">
+          </div>
+
+          <div class="field">
+            <label>
+              <span class="main">Quantidade produzida</span>
+              <span class="hint">qtd de unidades</span>
+            </label>
+            <input id="quantidade" type="number" step="1" min="1" placeholder="1">
+          </div>
+
+          <div class="field">
+            <label>
+              <span class="main">Tempo por unidade (min)</span>
+              <span class="hint">produção + acabamento</span>
+            </label>
+            <input id="tempoMinutos" type="number" step="1" min="0" placeholder="20">
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-ghost" type="button" id="btnLimpar">
+            Limpar campos
+          </button>
+          <button class="btn-primary" type="button" id="btnCalcular">
+            Calcular preço
+          </button>
+        </div>
+      </section>
+
+      <!-- CARD DIREITA: RESULTADOS -->
+      <section class="card">
+        <div class="result-header">
+          <div>
+            <div class="section-label" style="margin-top: 0;">
+              Resultado
+            </div>
+            <div class="pill-small">
+              <span class="pill-small-dot"></span>
+              baseado nos dados preenchidos
+            </div>
+          </div>
+          <div class="card-chip" id="produtoTag">Produto não informado</div>
+        </div>
+
+        <div class="price-main" id="precoVista">
+          R$ 0,00 <span>à vista</span>
+        </div>
+        <div class="price-secondary" id="precoCartao">
+          No cartão (c/ taxa): R$ 0,00
+        </div>
+
+        <div class="tag-row">
+          <div class="tag" id="tagCustoUnit">Custo por unidade: R$ 0,00</div>
+          <div class="tag" id="tagLucroUnit">Lucro por unidade: R$ 0,00</div>
+          <div class="tag" id="tagLucroTotal">Lucro total no lote: R$ 0,00</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="breakdown">
+          <div class="breakdown-item">
+            <div class="label">Insumos por unidade</div>
+            <div class="value" id="insumosPorUnidade">R$ 0,00</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="label">Mão de obra por unidade</div>
+            <div class="value" id="maoObraUnidade">R$ 0,00</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="label">Despesas fixas embutidas</div>
+            <div class="value" id="despesasEmb">R$ 0,00</div>
+          </div>
+          <div class="breakdown-item">
+            <div class="label">Custo total por unidade</div>
+            <div class="value" id="custoTotalUnit">R$ 0,00</div>
+          </div>
+        </div>
+
+        <p class="highlight-text" id="mensagemResumo">
+          Preencha os campos ao lado para ver uma sugestão de preço com lucro saudável para sua papelaria.
+        </p>
+
+       <p class="note">
+  💡 <strong>Como descobrir o valor da sua hora?</strong><br>
+  Some quanto você deseja ganhar no mês + suas despesas fixas.
+  Depois divida pelo número de horas que você realmente trabalha no mês.
+  O resultado é o valor mínimo da sua hora.
+</p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function parseValor(id) {
+      const el = document.getElementById(id);
+      const v = parseFloat(el.value.replace(",", ".")) || parseFloat(el.value) || 0;
+      return isNaN(v) ? 0 : v;
+    }
+
+    function formatReal(v) {
+      return v.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+        minimumFractionDigits: 2
+      });
+    }
+
+    function calcular() {
+      const nomeProduto = document.getElementById("nomeProduto").value.trim() || "Produto";
+
+      const valorHora = parseValor("valorHora") || 0;
+      const despesasFixasPct = parseValor("despesasFixas") || 0;
+      const margemLucroPct = parseValor("margemLucro") || 0;
+      const taxaMaquininhaPct = parseValor("taxaMaquininha") || 0;
+
+      const custoPapeis = parseValor("custoPapeis") || 0;
+      const custoFitas = parseValor("custoFitas") || 0;
+      const custoApliques = parseValor("custoApliques") || 0;
+      const outrosInsumos = parseValor("outrosInsumos") || 0;
+      const quantidade = parseFloat(document.getElementById("quantidade").value) || 1;
+      const tempoMinutos = parseFloat(document.getElementById("tempoMinutos").value) || 0;
+
+      const totalInsumos = custoPapeis + custoFitas + custoApliques + outrosInsumos;
+      const insumosPorUnidade = quantidade > 0 ? totalInsumos / quantidade : totalInsumos;
+
+      const horasPorUnidade = tempoMinutos / 60;
+      const maoObraPorUnidade = valorHora * horasPorUnidade;
+
+      const df = despesasFixasPct / 100;
+      const ml = margemLucroPct / 100;
+      const taxa = taxaMaquininhaPct / 100;
+
+      const custoBaseUnidade = insumosPorUnidade + maoObraPorUnidade;
+      const custoComDespesasUnidade = custoBaseUnidade * (1 + df);
+      const despesasEmb = custoComDespesasUnidade - custoBaseUnidade;
+
+      const precoVista = custoComDespesasUnidade * (1 + ml);
+      const precoCartao = precoVista * (1 + taxa);
+
+      const lucroPorUnidadeVista = precoVista - custoComDespesasUnidade;
+      const lucroTotalVista = lucroPorUnidadeVista * quantidade;
+
+      document.getElementById("produtoTag").textContent = nomeProduto;
+
+      document.getElementById("precoVista").innerHTML =
+        formatReal(precoVista) + ' <span>à vista</span>';
+      document.getElementById("precoCartao").textContent =
+        "No cartão (c/ taxa): " + formatReal(precoCartao);
+
+      document.getElementById("tagCustoUnit").textContent =
+        "Custo por unidade: " + formatReal(custoComDespesasUnidade);
+      document.getElementById("tagLucroUnit").textContent =
+        "Lucro por unidade: " + formatReal(lucroPorUnidadeVista);
+      document.getElementById("tagLucroTotal").textContent =
+        "Lucro total no lote: " + formatReal(lucroTotalVista);
+
+      document.getElementById("insumosPorUnidade").textContent =
+        formatReal(insumosPorUnidade);
+      document.getElementById("maoObraUnidade").textContent =
+        formatReal(maoObraPorUnidade);
+      document.getElementById("despesasEmb").textContent =
+        formatReal(despesasEmb);
+      document.getElementById("custoTotalUnit").textContent =
+        formatReal(custoComDespesasUnidade);
+
+      const mensagem = `
+        Se você vender <strong>${nomeProduto}</strong> por <strong>${formatReal(precoVista)}</strong> à vista,
+        terá um lucro aproximado de <strong>${formatReal(lucroPorUnidadeVista)}</strong> por unidade
+        e <strong>${formatReal(lucroTotalVista)}</strong> neste lote de ${quantidade} unidade(s).
+      `;
+      document.getElementById("mensagemResumo").innerHTML = mensagem;
+    }
+
+    function limpar() {
+      const ids = [
+        "valorHora",
+        "despesasFixas",
+        "margemLucro",
+        "taxaMaquininha",
+        "nomeProduto",
+        "custoPapeis",
+        "custoFitas",
+        "custoApliques",
+        "outrosInsumos",
+        "quantidade",
+        "tempoMinutos"
+      ];
+      ids.forEach(id => {
+        document.getElementById(id).value = "";
+      });
+
+      document.getElementById("produtoTag").textContent = "Produto não informado";
+      document.getElementById("precoVista").innerHTML = "R$ 0,00 <span>à vista</span>";
+      document.getElementById("precoCartao").textContent = "No cartão (c/ taxa): R$ 0,00";
+      document.getElementById("tagCustoUnit").textContent = "Custo por unidade: R$ 0,00";
+      document.getElementById("tagLucroUnit").textContent = "Lucro por unidade: R$ 0,00";
+      document.getElementById("tagLucroTotal").textContent = "Lucro total no lote: R$ 0,00";
+      document.getElementById("insumosPorUnidade").textContent = "R$ 0,00";
+      document.getElementById("maoObraUnidade").textContent = "R$ 0,00";
+      document.getElementById("despesasEmb").textContent = "R$ 0,00";
+      document.getElementById("custoTotalUnit").textContent = "R$ 0,00";
+      document.getElementById("mensagemResumo").textContent =
+        "Preencha os campos ao lado para ver uma sugestão de preço com lucro saudável para sua papelaria.";
+    }
+
+    document.getElementById("btnCalcular").addEventListener("click", calcular);
+    document.getElementById("btnLimpar").addEventListener("click", limpar);
+  </script>
+</body>
+</html>
